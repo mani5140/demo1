@@ -1,0 +1,314 @@
+paths:
+  /api:
+    #===================================================[GET: /app]==============================================
+    get:
+      summary: Get all apis
+      tags:
+        - Api
+      parameters:
+        - "$ref": "#/components/parameters/appIdentifierHeader"
+        - "$ref": "#/components/parameters/customerSecretKeyHeader"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data fetched successfully
+                  data:
+                    type: object
+                    properties:
+                      apis:
+                        type: array
+                        items:
+                          type: object
+                          "$ref": "#/components/schemas/apiSchema"
+
+   #===================================================[POST: /app]==============================================
+    post:
+      summary: Create new api
+      tags:
+        - Api
+      parameters:
+        - "$ref": "#/components/parameters/appIdentifierHeader"
+        - "$ref": "#/components/parameters/customerSecretKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              "$ref": "#/components/schemas/apiInsertSchema"
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Api created successfully
+                  data:
+                    type: object
+                    properties:
+                      api:
+                        type: object
+                        "$ref": "#/components/schemas/apiSchema"
+
+  /api/{id}:
+#     #===================================================[GET: /app/{id}]==============================================
+    get:
+      summary: Get api by ID
+      tags:
+        - Api
+      parameters:
+        - "$ref": "#/components/parameters/idParam"
+        - "$ref": "#/components/parameters/appIdentifierHeader"
+        - "$ref": "#/components/parameters/customerSecretKeyHeader"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data fetched successfully
+                  data:
+                    type: object
+                    properties:
+                      api:
+                        type: object
+                        "$ref": "#/components/schemas/apiSchema"
+
+    #===================================================[DELETE: /api/{id}]==============================================
+    delete:
+      summary: Delete api by ID
+      tags:
+        - Api
+      parameters:
+        - "$ref": "#/components/parameters/idParam"
+        - "$ref": "#/components/parameters/appIdentifierHeader"
+        - "$ref": "#/components/parameters/customerSecretKeyHeader"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data deleted successfully
+                  data:
+                    type: object
+                    "$ref": "#/components/schemas/apiDeleteSchema"
+                     
+    
+
+    #===================================================[PUT: /api/{id}]==============================================
+    put:
+      summary: Update api by ID
+      tags:
+        - Api
+      parameters:
+        - "$ref": "#/components/parameters/idParam"
+        - "$ref": "#/components/parameters/appIdentifierHeader"
+        - "$ref": "#/components/parameters/customerSecretKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              "$ref": "#/components/schemas/apiInsertSchema"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: API updated successfully
+                  data:
+                    type: object
+                    properties:
+                      api:
+                        type: object
+                        "$ref": "#/components/schemas/apiSchema" 
+
+
+  /api/swagger-sync:
+    #===================================================[GET: /app]==============================================
+    post:
+      summary: 
+      tags:
+        - Api
+      parameters:
+        - "$ref": "#/components/parameters/appIdentifierHeader"
+        - "$ref": "#/components/parameters/customerSecretKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              "$ref": "#/components/schemas/apiSwaggerRequestSchema"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data fetched successfully
+                  data:
+                    type: object
+                    properties:
+                      apis:
+                        type: array
+                        items:
+                          type: object
+                          "$ref": "#/components/schemas/apiSwaggerResponseSchema"
+
+
+# Common components
+components:
+  # Authorization token
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # Headers
+  parameters:
+    idParam:
+      in: path
+      name: id
+      schema:
+        type: integer
+        example: 123
+      required: true
+    appIdentifierHeader:
+      in: header
+      name: app-identifier
+      schema:
+        type: string
+        example: d645d2b40811f5672c93794d8622da45588f32cdb2ed85336475bf479e5d
+      required: true
+    customerSecretKeyHeader:
+      in: header
+      name: customer-secret-key
+      schema:
+        type: string
+        example: 12546580645c21b8a3529680f455f715b6b6829da8976bdfd2e9d51181fe
+      required: true
+  # Schemas
+  schemas:
+    # App schema
+    apiInsertSchema:
+      title: Api schema
+      properties:
+        url:
+          type: string
+          example: "/api/api_1"
+        method:
+          type: string
+          example: get
+        description:
+          type: string
+          example: get call
+        is_module_linked:
+          type: boolean
+          example: 1
+        
+    apiSchema:
+      title: Api schema
+      properties:
+        id:
+          type: integer
+          example: 1
+        url:
+          type: string
+          example: "/api/api_1"
+        method:
+          type: string
+          example: get
+        description:
+          type: string
+          example: get call
+        is_module_linked:
+          type: boolean
+          example: 1
+        app_id:
+          type: number
+          example: 1
+        customer_id:
+          type: number
+          example: 1
+        created_at:
+          type: date
+          example: 2024-12-02T05:03:40.000Z
+        updated_at:
+          type: date
+          example: 2024-12-02T05:03:40.000Z
+
+    apiDeleteSchema:
+      title: Api delete schema
+      properties:
+        api:
+          type: string
+          example: "Api Delete Successfully"
+
+    apiSwaggerRequestSchema:
+      title: Api swagger schema
+      properties:
+        url:
+          type: string
+          example: "C:/infoObject/Marktine_consumption_backend/iam-backend/swagger/api.yaml"
+
+    apiSwaggerResponseSchema:
+      title: Api swagger schema
+      properties:
+        url:
+          type: string
+          example: "/api/api_1"
+        method:
+          type: string
+          example: get
+    
+   
