@@ -1,0 +1,141 @@
+paths:
+  /consumption:
+    #===================================================[GET: /api_module]==============================================
+    post:
+      summary: Get all apis
+      tags:
+        - ApiModule
+      parameters:
+        - "$ref": "#/components/parameters/appIdentifierHeader"
+        - "$ref": "#/components/parameters/customerSecretKeyHeader"
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: Data fetched successfully
+                  data:
+                    type: object
+                    properties:
+                      apiModule:
+                        type: array
+                        items:
+                          type: object
+                          "$ref": "#/components/schemas/apiModuleSchema"
+  /upload:
+   #===================================================[POST: /api_module]==============================================
+    post:
+      summary: Create new apiModule
+      tags:
+        - ApiModule
+      parameters:
+        - "$ref": "#/components/parameters/appIdentifierHeader"
+        - "$ref": "#/components/parameters/customerSecretKeyHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              "$ref": "#/components/schemas/apiModuleInsertSchema"
+      responses:
+        201:
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: ApiModule created successfully
+                  data:
+                    type: object
+                    properties:
+                      apiModule:
+                        type: object
+                        "$ref": "#/components/schemas/apiModuleSchema"
+
+  
+# Common components
+components:
+  # Authorization token
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  # Headers
+  parameters:
+    idParam:
+      in: path
+      name: id
+      schema:
+        type: integer
+        example: 123
+      required: true
+    appIdentifierHeader:
+      in: header
+      name: app-identifier
+      schema:
+        type: string
+        example: d645d2b40811f5672c93794d8622da45588f32cdb2ed85336475bf479e5d
+      required: true
+    customerSecretKeyHeader:
+      in: header
+      name: customer-secret-key
+      schema:
+        type: string
+        example: 12546580645c21b8a3529680f455f715b6b6829da8976bdfd2e9d51181fe
+      required: true
+  # Schemas
+  schemas:
+    # App schema
+    apiModuleInsertSchema:
+      title: Api schema
+      properties:
+        module_id:
+          type: integer
+          example: 1
+        api_id:
+          type: integer,
+          example: 1
+
+
+    apiModuleSchema:
+      title: ApiModule schema
+      properties:
+        id:
+          type: integer
+          example: 1
+        module_id:
+          type: integer
+          example: 1
+        api_id:
+          type: integer
+          example: 1
+        app_id:
+          type: number
+          example: 1
+        customer_id:
+          type: number
+          example: 1
+        created_at:
+          type: date
+          example: 2024-12-02T05:03:40.000Z
+        updated_at:
+          type: date
+          example: 2024-12-02T05:03:40.000Z  
+    
